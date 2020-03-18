@@ -1,0 +1,32 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <span>Vacuum monitor</span>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<mat-card class="example-card">
+  <mat-card-header>
+    <mat-card-title>Last {{ selectedDuration.title }}</mat-card-title>
+  </mat-card-header>
+
+  <mat-checkbox [(ngModel)]="logScaleFlag" (change)="scaleChanged()">LogY</mat-checkbox>
+  <div id="graphDrawing"></div>
+
+  <mat-card-actions>
+
+    <mat-slide-toggle [checked]="autoRefresh" (change)="toggleAutoRefresh()">
+      Auto refresh
+    </mat-slide-toggle>
+
+
+    <mat-form-field style="padding: 0% 0% 0% 10%;">
+      <mat-label>Choose the plotting range</mat-label>
+      <mat-select [(value)]="selectedDuration" (selectionChange)="onTimeDurationSelected()">
+        <mat-option *ngFor="let duration of timeDurations" [value]="duration">
+          {{ duration.title }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+  </mat-card-actions>
+</mat-card>
