@@ -6,27 +6,58 @@
 
 <mat-card class="example-card">
   <mat-card-header>
-    <mat-card-title>Last {{ selectedDuration.title }}</mat-card-title>
+    <mat-card-title>Last {{ selectedDuration.title }} @ A1</mat-card-title>
   </mat-card-header>
 
-  <mat-checkbox [(ngModel)]="logScaleFlag" (change)="scaleChanged()">LogY</mat-checkbox>
-  <div id="graphDrawing"></div>
+  <mat-checkbox [(ngModel)]="logScaleFlag" (change)="scaleChanged()"
+    >LogY</mat-checkbox
+  >
+  <div id="grPA1"></div>
 
   <mat-card-actions>
-
     <mat-slide-toggle [checked]="autoRefresh" (change)="toggleAutoRefresh()">
       Auto refresh
     </mat-slide-toggle>
 
-
     <mat-form-field style="padding: 0% 0% 0% 10%;">
       <mat-label>Choose the plotting range</mat-label>
-      <mat-select [(value)]="selectedDuration" (selectionChange)="onTimeDurationSelected()">
+      <mat-select
+        [(value)]="selectedDuration"
+        (selectionChange)="onTimeDurationSelected()"
+      >
         <mat-option *ngFor="let duration of timeDurations" [value]="duration">
           {{ duration.title }}
         </mat-option>
       </mat-select>
     </mat-form-field>
+  </mat-card-actions>
+</mat-card>
 
+<mat-card class="example-card">
+  <mat-card-header>
+    <mat-card-title>Last {{ selectedDuration.title }} @ A2</mat-card-title>
+  </mat-card-header>
+
+  <mat-checkbox [(ngModel)]="logScaleFlag" (change)="scaleChanged()"
+    >LogY</mat-checkbox
+  >
+  <div id="grPA2"></div>
+
+  <mat-card-actions>
+    <mat-slide-toggle [checked]="autoRefresh" (change)="toggleAutoRefresh()">
+      Auto refresh
+    </mat-slide-toggle>
+
+    <mat-form-field style="padding: 0% 0% 0% 10%;">
+      <mat-label>Choose the plotting range</mat-label>
+      <mat-select
+        [(value)]="selectedDuration"
+        (selectionChange)="onTimeDurationSelected()"
+      >
+        <mat-option *ngFor="let duration of timeDurations" [value]="duration">
+          {{ duration.title }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
   </mat-card-actions>
 </mat-card>

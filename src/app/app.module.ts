@@ -5,8 +5,10 @@ import {
   MatCardModule,
   MatSlideToggleModule,
   MatSelectModule,
-  MatCheckboxModule
+  MatCheckboxModule,
+  MatGridListModule
 } from "@angular/material";
+import { FlexLayoutModule } from "@angular/flex-layout";
 
 import { AppComponent } from "./app.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
@@ -19,8 +21,10 @@ import { FormsModule } from "@angular/forms";
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
+    FlexLayoutModule,
     MatToolbarModule,
     MatCardModule,
+    MatGridListModule,
     MatSlideToggleModule,
     MatSelectModule,
     MatCheckboxModule,

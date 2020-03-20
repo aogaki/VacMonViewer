@@ -12,7 +12,6 @@ export class AppComponent {
   title = "vac-mon-viewer";
 
   public autoRefresh = false;
-  graphName = "graphDrawing";
 
   public logScaleFlag: boolean = false;
 
@@ -34,16 +33,31 @@ export class AppComponent {
     const offset = this.selectedDuration.seconds;
     const start = Math.round(date.getTime() / 1000) - offset;
 
-    this.httpClientService.getVacMonGraph(String(start)).then(response => {
-      const obj = JSROOT.parse(response["canvas"]);
-      obj.fGridx = true;
-      obj.fGridy = true;
-      obj.fLogy = this.logScaleFlag;
+    this.httpClientService
+      .getVacMonGraph(String(start), "0", "PA1")
+      .then(response => {
+        const obj = JSROOT.parse(response["canvas"]);
+        obj.fGridx = true;
+        obj.fGridy = true;
+        obj.fLogy = this.logScaleFlag;
 
-      // To refresh the range of X-axis (time), this is simplest for me
-      if (JSROOT.cleanup) JSROOT.cleanup(this.graphName);
-      JSROOT.draw(this.graphName, obj, "ALP");
-    });
+        // To refresh the range of X-axis (time), this is simplest for me
+        if (JSROOT.cleanup) JSROOT.cleanup("grPA1");
+        JSROOT.redraw("grPA1", obj, "ALP");
+      });
+
+    this.httpClientService
+      .getVacMonGraph(String(start), "0", "PA2")
+      .then(response => {
+        const obj = JSROOT.parse(response["canvas"]);
+        obj.fGridx = true;
+        obj.fGridy = true;
+        obj.fLogy = this.logScaleFlag;
+
+        // To refresh the range of X-axis (time), this is simplest for me
+        if (JSROOT.cleanup) JSROOT.cleanup("grPA2");
+        JSROOT.draw("grPA2", obj, "ALP");
+      });
   }
 
   constructor(private httpClientService: HttpClientService) {

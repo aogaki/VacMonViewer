@@ -5,8 +5,8 @@ import { HttpClient } from "@angular/common/http";
   providedIn: "root"
 })
 export class HttpClientService {
-  // private host: string = "http://172.18.4.56:8000/";
-  private host: string = "http://172.18.7.22/";
+  private host: string = "http://172.18.4.56:8000/";
+  // private host: string = "http://172.18.7.22/";
   private headers: any = new Headers({ "Content-Type": "application/json" });
 
   constructor(private http: HttpClient) {}
@@ -27,10 +27,20 @@ export class HttpClientService {
       .catch(this.errorHandler);
   }
 
-  public getVacMonGraph(start: string = "0", stop: string = "0"): Promise<any> {
+  public getVacMonGraph(
+    start: string = "0",
+    stop: string = "0",
+    name: string = "PA1"
+  ): Promise<any> {
     return this.http
       .get(
-        this.host + "/ELIADE/GetVacMonGraph?start=" + start + "?stop=" + stop,
+        this.host +
+          "/ELIADE/GetVacMonGraph?start=" +
+          start +
+          "&stop=" +
+          stop +
+          "&name=" +
+          name,
         this.headers
       )
       .toPromise()
