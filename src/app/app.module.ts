@@ -1,13 +1,11 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
-import {
-  MatToolbarModule,
-  MatCardModule,
-  MatSlideToggleModule,
-  MatSelectModule,
-  MatCheckboxModule,
-  MatGridListModule
-} from "@angular/material";
+import { MatCardModule } from "@angular/material/card";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatGridListModule } from "@angular/material/grid-list";
+import { MatSelectModule } from "@angular/material/select";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { MatToolbarModule } from "@angular/material/toolbar";
 import { FlexLayoutModule } from "@angular/flex-layout";
 
 import { AppComponent } from "./app.component";

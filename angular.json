@@ -122,5 +122,8 @@
       }
     }
   },
-  "defaultProject": "vac-mon-viewer"
+  "defaultProject": "vac-mon-viewer",
+  "cli": {
+    "analytics": false
+  }
 }

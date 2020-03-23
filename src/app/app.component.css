@@ -1,6 +1,7 @@
 .example-card {
-  max-width: 90%;
-  margin: 5% 5% 5% 5%;
+  position: absolute;
+  /* max-width: 90%; */
+  margin: 5% 0% 5% 5%;
 }
 
 .mat-toolbar.mat-primary {

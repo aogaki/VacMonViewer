@@ -1,5 +1,7 @@
 import { Component } from "@angular/core";
 import { HttpClientService } from "./http-client.service";
+import { map } from "rxjs/operators";
+import { Breakpoints, BreakpointObserver } from "@angular/cdk/layout";
 
 declare var JSROOT: any;
 
@@ -11,7 +13,7 @@ declare var JSROOT: any;
 export class AppComponent {
   title = "vac-mon-viewer";
 
-  public autoRefresh = false;
+  public autoRefresh: boolean = false;
 
   public logScaleFlag: boolean = false;
 
@@ -28,39 +30,74 @@ export class AppComponent {
   ];
   selectedDuration = this.timeDurations[0];
 
+  names = [
+    { sensor: "PA1", graph: "grPA1" },
+    { sensor: "PA2", graph: "grPA2" }
+  ];
+
+  cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
+    map(({ matches }) => {
+      if (matches) {
+        return [
+          {
+            sensorName: this.names[0].sensor,
+            grName: this.names[0].graph,
+            cols: 2,
+            rows: 1
+          },
+          {
+            sensorName: this.names[1].sensor,
+            grName: this.names[1].graph,
+            cols: 2,
+            rows: 1
+          }
+        ];
+      }
+
+      return [
+        {
+          sensorName: this.names[0].sensor,
+          grName: this.names[0].graph,
+          cols: 1,
+          rows: 1
+        },
+        {
+          sensorName: this.names[1].sensor,
+          grName: this.names[1].graph,
+          cols: 1,
+          rows: 1
+        }
+      ];
+    })
+  );
+
   getGraph() {
     const date = new Date();
     const offset = this.selectedDuration.seconds;
     const start = Math.round(date.getTime() / 1000) - offset;
 
-    this.httpClientService
-      .getVacMonGraph(String(start), "0", "PA1")
-      .then(response => {
-        const obj = JSROOT.parse(response["canvas"]);
-        obj.fGridx = true;
-        obj.fGridy = true;
-        obj.fLogy = this.logScaleFlag;
+    for (let i = 0; i < this.names.length; i++) {
+      const name = this.names[i];
 
-        // To refresh the range of X-axis (time), this is simplest for me
-        if (JSROOT.cleanup) JSROOT.cleanup("grPA1");
-        JSROOT.redraw("grPA1", obj, "ALP");
-      });
+      this.httpClientService
+        .getVacMonGraph(String(start), "0", name.sensor)
+        .then(response => {
+          const obj = JSROOT.parse(response["canvas"]);
+          obj.fGridx = true;
+          obj.fGridy = true;
+          obj.fLogy = this.logScaleFlag;
 
-    this.httpClientService
-      .getVacMonGraph(String(start), "0", "PA2")
-      .then(response => {
-        const obj = JSROOT.parse(response["canvas"]);
-        obj.fGridx = true;
-        obj.fGridy = true;
-        obj.fLogy = this.logScaleFlag;
-
-        // To refresh the range of X-axis (time), this is simplest for me
-        if (JSROOT.cleanup) JSROOT.cleanup("grPA2");
-        JSROOT.draw("grPA2", obj, "ALP");
-      });
+          // To refresh the range of X-axis (time), this is simplest for me
+          if (JSROOT.cleanup) JSROOT.cleanup(name.graph);
+          JSROOT.redraw(name.graph, obj, "ALP");
+        });
+    }
   }
 
-  constructor(private httpClientService: HttpClientService) {
+  constructor(
+    private httpClientService: HttpClientService,
+    private breakpointObserver: BreakpointObserver
+  ) {
     this.getGraph();
 
     setInterval(() => {
