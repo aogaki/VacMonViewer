@@ -6,15 +6,17 @@ import { MatGridListModule } from "@angular/material/grid-list";
 import { MatSelectModule } from "@angular/material/select";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatToolbarModule } from "@angular/material/toolbar";
+import { MatDialogModule } from "@angular/material/dialog";
 import { FlexLayoutModule } from "@angular/flex-layout";
 
 import { AppComponent } from "./app.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { HttpClientModule } from "@angular/common/http";
 import { FormsModule } from "@angular/forms";
+import { AlertDialogComponent } from "./alert/alert-dialog/alert-dialog.component";
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, AlertDialogComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -26,9 +28,10 @@ import { FormsModule } from "@angular/forms";
     MatSlideToggleModule,
     MatSelectModule,
     MatCheckboxModule,
-    HttpClientModule
+    MatDialogModule,
+    HttpClientModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

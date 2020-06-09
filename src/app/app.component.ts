@@ -1,20 +1,23 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { HttpClientService } from "./http-client.service";
 import { map } from "rxjs/operators";
 import { Breakpoints, BreakpointObserver } from "@angular/cdk/layout";
+import { MatDialog } from "@angular/material/dialog";
+import { AlertDialogComponent } from "./alert/alert-dialog/alert-dialog.component";
 
 declare var JSROOT: any;
 
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
-  styleUrls: ["./app.component.css"]
+  styleUrls: ["./app.component.css"],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = "vac-mon-viewer";
 
-  public autoRefresh: boolean = false;
+  private dialogCanOpen: boolean = true;
 
+  public autoRefresh: boolean = false;
   public logScaleFlag: boolean = false;
 
   timeDurations = [
@@ -26,13 +29,13 @@ export class AppComponent {
     { title: "1 day", seconds: 24 * 60 * 60 },
     { title: "2 days", seconds: 2 * 24 * 60 * 60 },
     { title: "4 days", seconds: 4 * 24 * 60 * 60 },
-    { title: "8 days", seconds: 8 * 24 * 60 * 60 }
+    { title: "8 days", seconds: 8 * 24 * 60 * 60 },
   ];
   selectedDuration = this.timeDurations[0];
 
   names = [
     { sensor: "PA1", graph: "grPA1" },
-    { sensor: "PA2", graph: "grPA2" }
+    { sensor: "PA2", graph: "grPA2" },
   ];
 
   cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
@@ -43,14 +46,14 @@ export class AppComponent {
             sensorName: this.names[0].sensor,
             grName: this.names[0].graph,
             cols: 2,
-            rows: 1
+            rows: 1,
           },
           {
             sensorName: this.names[1].sensor,
             grName: this.names[1].graph,
             cols: 2,
-            rows: 1
-          }
+            rows: 1,
+          },
         ];
       }
 
@@ -59,14 +62,14 @@ export class AppComponent {
           sensorName: this.names[0].sensor,
           grName: this.names[0].graph,
           cols: 1,
-          rows: 1
+          rows: 1,
         },
         {
           sensorName: this.names[1].sensor,
           grName: this.names[1].graph,
           cols: 1,
-          rows: 1
-        }
+          rows: 1,
+        },
       ];
     })
   );
@@ -81,7 +84,7 @@ export class AppComponent {
 
       this.httpClientService
         .getVacMonGraph(String(start), "0", name.sensor)
-        .then(response => {
+        .then((response) => {
           const obj = JSROOT.parse(response["canvas"]);
           obj.fGridx = true;
           obj.fGridy = true;
@@ -94,9 +97,21 @@ export class AppComponent {
     }
   }
 
+  getState() {
+    this.httpClientService.getStatus().then((response) => {
+      const status = response.status;
+      if (status !== "OK") {
+        if (this.dialogCanOpen) {
+          this.openDialog(status);
+        }
+      }
+    });
+  }
+
   constructor(
     private httpClientService: HttpClientService,
-    private breakpointObserver: BreakpointObserver
+    private breakpointObserver: BreakpointObserver,
+    public dialog: MatDialog
   ) {
     this.getGraph();
 
@@ -105,6 +120,12 @@ export class AppComponent {
         this.getGraph();
       }
     }, 5000);
+
+    setInterval(() => {
+      this.getState();
+    }, 5000);
+
+    // this.openDialog();
   }
 
   toggleAutoRefresh() {
@@ -118,4 +139,23 @@ export class AppComponent {
   scaleChanged(): void {
     this.getGraph();
   }
+
+  openDialog(errorMessage: string = "Kill the warning!") {
+    this.dialogCanOpen = false;
+    const dialogRef = this.dialog.open(AlertDialogComponent, {
+      data: {
+        title: "Pressure monitor warning",
+        message: errorMessage,
+      },
+      height: "300px",
+      width: "500px",
+      disableClose: false,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      this.dialogCanOpen = true;
+    });
+  }
+
+  ngOnInit(): void {}
 }

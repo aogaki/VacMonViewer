@@ -1,0 +1,18 @@
+<audio autoplay loop id="playAudio">
+  <source src="assets/warning.mp3">
+</audio>
+
+<h2 mat-dialog-title>{{data.title}}</h2>
+<mat-dialog-content>
+  {{data.message}}
+</mat-dialog-content>
+<mat-dialog-actions>
+  <table cellspacing="15">
+    <tr>
+      <td>
+        <button mat-raised-button (click)="onClickOkButton()">OK</button>
+      </td>
+    </tr>
+  </table>
+
+</mat-dialog-actions>

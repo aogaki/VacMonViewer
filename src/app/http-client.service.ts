@@ -2,11 +2,11 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 
 @Injectable({
-  providedIn: "root"
+  providedIn: "root",
 })
 export class HttpClientService {
-  // private host: string = "http://172.18.4.56:8000/";
-  private host: string = "http://172.18.7.22/";
+  private host: string = "http://172.18.4.56:8080/";
+  // private host: string = "http://172.18.7.22/";
   private headers: any = new Headers({ "Content-Type": "application/json" });
 
   constructor(private http: HttpClient) {}
@@ -16,11 +16,22 @@ export class HttpClientService {
     return Promise.reject(err.message || err);
   }
 
+  public getStatus(): Promise<any> {
+    return this.http
+      .get(this.host + "/ELIADE/GetStatus", this.headers)
+      .toPromise()
+      .then((res) => {
+        const response: any = res;
+        return response;
+      })
+      .catch(this.errorHandler);
+  }
+
   public getVacMonList(): Promise<any> {
     return this.http
       .get(this.host + "/ELIADE/GetVacMonList", this.headers)
       .toPromise()
-      .then(res => {
+      .then((res) => {
         const response: any = res;
         return response;
       })
@@ -44,7 +55,7 @@ export class HttpClientService {
         this.headers
       )
       .toPromise()
-      .then(res => {
+      .then((res) => {
         const response: any = res;
         return response;
       })
