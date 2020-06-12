@@ -2,14 +2,15 @@
   <mat-toolbar-row>
     <span>Vacuum monitor</span>
   </mat-toolbar-row>
+  <mat-toolbar-row>
+    <mat-slide-toggle [checked]="alarmMode" (change)="toggleAlarmMode()">
+      Alarm
+    </mat-slide-toggle>
+  </mat-toolbar-row>
 </mat-toolbar>
 
 <mat-grid-list cols="2" rowHeight="700px">
-  <mat-grid-tile
-    *ngFor="let card of cards | async; let i = index"
-    [colspan]="card.cols"
-    [rowspan]="card.rows"
-  >
+  <mat-grid-tile *ngFor="let card of cards | async; let i = index" [colspan]="card.cols" [rowspan]="card.rows">
     <mat-card class="example-card">
       <mat-card-header>
         <mat-card-title>
@@ -24,23 +25,14 @@
       <mat-card-content id="{{ names[i].graph }}"></mat-card-content>
 
       <mat-card-actions>
-        <mat-slide-toggle
-          [checked]="autoRefresh"
-          (change)="toggleAutoRefresh()"
-        >
+        <mat-slide-toggle [checked]="autoRefresh" (change)="toggleAutoRefresh()">
           Auto refresh
         </mat-slide-toggle>
 
         <mat-form-field style="padding: 0% 0% 0% 10%;">
           <mat-label>Choose the plotting range</mat-label>
-          <mat-select
-            [(value)]="selectedDuration"
-            (selectionChange)="onTimeDurationSelected()"
-          >
-            <mat-option
-              *ngFor="let duration of timeDurations"
-              [value]="duration"
-            >
+          <mat-select [(value)]="selectedDuration" (selectionChange)="onTimeDurationSelected()">
+            <mat-option *ngFor="let duration of timeDurations" [value]="duration">
               {{ duration.title }}
             </mat-option>
           </mat-select>

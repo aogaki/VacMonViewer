@@ -17,6 +17,7 @@ export class AppComponent implements OnInit {
 
   private dialogCanOpen: boolean = true;
 
+  public alarmMode: boolean = true;
   public autoRefresh: boolean = false;
   public logScaleFlag: boolean = false;
 
@@ -101,7 +102,7 @@ export class AppComponent implements OnInit {
     this.httpClientService.getStatus().then((response) => {
       const status = response.status;
       if (status !== "OK") {
-        if (this.dialogCanOpen) {
+        if (this.dialogCanOpen && this.alarmMode) {
           this.openDialog(status);
         }
       }
@@ -126,6 +127,10 @@ export class AppComponent implements OnInit {
     }, 5000);
 
     // this.openDialog();
+  }
+
+  toggleAlarmMode() {
+    this.alarmMode = !this.alarmMode;
   }
 
   toggleAutoRefresh() {

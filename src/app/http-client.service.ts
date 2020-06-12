@@ -5,8 +5,8 @@ import { HttpClient } from "@angular/common/http";
   providedIn: "root",
 })
 export class HttpClientService {
-  private host: string = "http://172.18.4.56:8080/";
-  // private host: string = "http://172.18.7.22/";
+  // private host: string = "http://172.18.4.56:8080/";
+  private host: string = "http://172.18.7.22/";
   private headers: any = new Headers({ "Content-Type": "application/json" });
 
   constructor(private http: HttpClient) {}
