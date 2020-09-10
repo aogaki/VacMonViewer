@@ -19,7 +19,8 @@ export class AppComponent implements OnInit {
 
   public alarmMode: boolean = true;
   public autoRefresh: boolean = false;
-  public logScaleFlag: boolean = false;
+  public logScaleFlag: boolean[] = [false, false];
+  public lastData: string[] = ["Hmm", "Nice"];
 
   timeDurations = [
     { title: "1 hour", seconds: 60 * 60 },
@@ -29,14 +30,18 @@ export class AppComponent implements OnInit {
     { title: "12 hours", seconds: 12 * 60 * 60 },
     { title: "1 day", seconds: 24 * 60 * 60 },
     { title: "2 days", seconds: 2 * 24 * 60 * 60 },
+    { title: "3 days", seconds: 3 * 24 * 60 * 60 },
     { title: "4 days", seconds: 4 * 24 * 60 * 60 },
+    { title: "5 days", seconds: 5 * 24 * 60 * 60 },
+    { title: "6 days", seconds: 6 * 24 * 60 * 60 },
+    { title: "7 days", seconds: 7 * 24 * 60 * 60 },
     { title: "8 days", seconds: 8 * 24 * 60 * 60 },
   ];
   selectedDuration = this.timeDurations[0];
 
   names = [
-    { sensor: "PA1", graph: "grPA1" },
-    { sensor: "PA2", graph: "grPA2" },
+    { sensor: "PA1", graph: "grPA1", title: "Vacuum Pressure" },
+    { sensor: "PA2", graph: "grPA2", title: "Resistance" },
   ];
 
   cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
@@ -62,7 +67,8 @@ export class AppComponent implements OnInit {
         {
           sensorName: this.names[0].sensor,
           grName: this.names[0].graph,
-          cols: 1,
+          // cols: 1,
+          cols: 2,
           rows: 1,
         },
         {
@@ -80,7 +86,8 @@ export class AppComponent implements OnInit {
     const offset = this.selectedDuration.seconds;
     const start = Math.round(date.getTime() / 1000) - offset;
 
-    for (let i = 0; i < this.names.length; i++) {
+    // for (let i = 0; i < this.names.length; i++) {
+    for (let i = 0; i < 1; i++) {
       const name = this.names[i];
 
       this.httpClientService
@@ -89,13 +96,14 @@ export class AppComponent implements OnInit {
           const obj = JSROOT.parse(response["canvas"]);
           obj.fGridx = true;
           obj.fGridy = true;
-          obj.fLogy = this.logScaleFlag;
+          obj.fLogy = this.logScaleFlag[i];
 
           // To refresh the range of X-axis (time), this is simplest for me
           if (JSROOT.cleanup) JSROOT.cleanup(name.graph);
           JSROOT.redraw(name.graph, obj, "ALP");
         });
     }
+    this.getLast();
   }
 
   getState() {
@@ -106,6 +114,13 @@ export class AppComponent implements OnInit {
           this.openDialog(status);
         }
       }
+    });
+  }
+
+  getLast() {
+    this.httpClientService.getLast().then((response) => {
+      this.lastData[0] = response.pressure + " mbar";
+      this.lastData[1] = response.resistance + " Ω";
     });
   }
 
@@ -125,8 +140,6 @@ export class AppComponent implements OnInit {
     setInterval(() => {
       this.getState();
     }, 5000);
-
-    // this.openDialog();
   }
 
   toggleAlarmMode() {

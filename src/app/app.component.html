@@ -9,16 +9,17 @@
   </mat-toolbar-row>
 </mat-toolbar>
 
-<mat-grid-list cols="2" rowHeight="700px">
+<mat-grid-list cols="2" rowHeight="900px">
   <mat-grid-tile *ngFor="let card of cards | async; let i = index" [colspan]="card.cols" [rowspan]="card.rows">
-    <mat-card class="example-card">
+    <mat-card class="example-card" *ngIf="i===0">
       <mat-card-header>
         <mat-card-title>
-          Last {{ selectedDuration.title }} @ {{ names[i].sensor }}
+          Last {{ selectedDuration.title }} of {{ names[i].title }} <br>
+          {{lastData[i]}} (last measurement)
         </mat-card-title>
       </mat-card-header>
 
-      <mat-checkbox [(ngModel)]="logScaleFlag" (change)="scaleChanged()">
+      <mat-checkbox [(ngModel)]="logScaleFlag[i]" (change)="scaleChanged(i)">
         LogY
       </mat-checkbox>
 
@@ -42,4 +43,4 @@
   </mat-grid-tile>
 </mat-grid-list>
 
-<div *ngFor="let card of cards | async; let i = index"></div>
+<!-- <div *ngFor="let card of cards | async; let i = index"></div> -->

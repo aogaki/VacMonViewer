@@ -27,6 +27,17 @@ export class HttpClientService {
       .catch(this.errorHandler);
   }
 
+  public getLast(): Promise<any> {
+    return this.http
+      .get(this.host + "/ELIADE/GetLast", this.headers)
+      .toPromise()
+      .then((res) => {
+        const response: any = res;
+        return response;
+      })
+      .catch(this.errorHandler);
+  }
+
   public getVacMonList(): Promise<any> {
     return this.http
       .get(this.host + "/ELIADE/GetVacMonList", this.headers)
